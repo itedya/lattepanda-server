@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "laravel-mix": "^6.0.49",
+    "lodash": "^4.17.21",
+    "lowdb": "^3.0.0",
+    "morgan": "~1.9.1",
+    "serialport": "^10.4.0",
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
+  }
+}

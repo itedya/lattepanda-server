@@ -1,26 +1,22 @@
 import * as arduinoConfigurationsService from "../../services/arduino-configurations.js";
-import yup from "yup";
+import Validator from 'validatorjs';
 
 const createArduinoConfigurationValidation = async (req, res, next) => {
     const serialports = await arduinoConfigurationsService.getAvailableSerialPorts()
         .then(res => res.map(ele => ele.path));
 
-    let schema = yup.object().shape({
-        name: yup.string().required(),
-        serialport: yup.string().required()
-            .matches(new RegExp(`^${serialports.join('|')}$`), {excludeEmptyString: true}),
+    const validation = new Validator(req.body, {
+        name: 'required|string|min:3|max:64',
+        serialport: 'required|string|min:4|max:36|in:' + serialports.join(',')
+        // pinouts: 'required|array',
+        // 'pinouts.*.valvePin': 'required|integer|min:1|max:99',
+        // 'pinouts.*.sensorPin': 'required|integer|min:1|max:99'
     });
 
-    const validated = await schema.validate(req.body)
-        .then(() => req.body)
-        .catch(err => {
-            res.json(err.errors);
-            return false;
-        });
-
-    if (!validated) return;
-
-    req.validated = validated;
+    if (validation.fails()) {
+        return res.json(validation.errors.all())
+            .status(400);
+    }
 
     next();
 }

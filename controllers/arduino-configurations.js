@@ -22,7 +22,7 @@ const deleteArduinoConfiguration = async (req, res) => {
 
     await arduinoConfigurationsService.deleteArduinoConfigurationByUuid(uuid);
 
-    res.send().status(200);
+    res.send().status(204);
 }
 
 const updateArduinoConfiguration = async (req, res) => {

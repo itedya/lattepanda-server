@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/arduino-configurations
+Content-Type: application/json
+
+{
+  "name": "Name1",
+  "serialport": "COM1"
+}

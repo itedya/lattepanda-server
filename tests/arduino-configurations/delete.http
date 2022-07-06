@@ -1,0 +1,6 @@
+DELETE http://localhost:3000/api/arduino-configurations
+Content-Type: application/json
+
+{
+  "uuid": "b3cbae8d-3921-479e-8a3e-f8be285811e6"
+}

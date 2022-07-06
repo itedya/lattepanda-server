@@ -1,0 +1,8 @@
+PUT http://localhost:3000/api/arduino-configurations
+Content-Type: application/json
+
+{
+  "uuid": "b9bf5194-bdc1-4396-b9a5-e6f902f80239",
+  "name": "Name2",
+  "serialport": "COM1"
+}

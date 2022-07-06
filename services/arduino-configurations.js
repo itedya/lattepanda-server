@@ -40,9 +40,23 @@ const createConfiguration = async (configuration) => {
 const deleteArduinoConfigurationByUuid = async (uuid) => {
     const db = await getDB();
 
-    db.data.arduinoConfigurations = _.remove(db.data.arduinoConfigurations, (ele) => ele.uuid === uuid);
+    _.remove(db.data.arduinoConfigurations, (ele) => {
+        return ele.uuid === uuid
+    });
 
     await db.write();
+}
+
+const updateArduinoConfiguration = async (dto) => {
+    const db = await getDB();
+
+    const index = _.findIndex(db.data.arduinoConfigurations, { uuid: dto.uuid });
+
+    db.data.arduinoConfigurations.splice(index, 1, dto);
+
+    await db.write();
+
+    return dto;
 }
 
 export {
@@ -50,5 +64,6 @@ export {
     getArduinoConfigurations,
     getArduinoConfigurationByUuid,
     createConfiguration,
-    deleteArduinoConfigurationByUuid
+    deleteArduinoConfigurationByUuid,
+    updateArduinoConfiguration
 }

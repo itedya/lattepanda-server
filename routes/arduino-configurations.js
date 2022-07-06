@@ -1,16 +1,14 @@
 import express from 'express';
-import {
-    createArduinoConfiguration, deleteArduinoConfiguration, getArduinoConfigurations,
-} from "../controllers/arduino-configurations.js";
+import * as controller from "../controllers/arduino-configurations.js";
 import createArduinoConfigurationValidation from "../validation/arduino-configurations/create.js";
 import updateArduinoConfigurationValidation from "../validation/arduino-configurations/update.js";
-import deleteArduinoConfigurationValidation from "../validation/arduino-configurations/delete";
+import deleteArduinoConfigurationValidation from "../validation/arduino-configurations/delete.js";
 
 const router = express.Router();
 
-router.get('/', getArduinoConfigurations);
-router.post('/', createArduinoConfigurationValidation, createArduinoConfiguration);
-router.put('/', updateArduinoConfigurationValidation, updateArduinoConfiguration);
-router.delete('/', deleteArduinoConfigurationValidation, deleteArduinoConfiguration);
+router.get('/', controller.getArduinoConfigurations);
+router.post('/', createArduinoConfigurationValidation, controller.createArduinoConfiguration);
+router.put('/', updateArduinoConfigurationValidation, controller.updateArduinoConfiguration);
+router.delete('/', deleteArduinoConfigurationValidation, controller.deleteArduinoConfiguration);
 
 export default router;

@@ -9,7 +9,7 @@ const getArduinoConfigurations = async (req, res) => {
 }
 
 const createArduinoConfiguration = async (req, res) => {
-    const dto = new ArduinoConfigurationDto(req.validated);
+    const dto = new ArduinoConfigurationDto(req.body);
 
     const result = await arduinoConfigurationsService.createConfiguration(dto);
 
@@ -18,16 +18,25 @@ const createArduinoConfiguration = async (req, res) => {
 }
 
 const deleteArduinoConfiguration = async (req, res) => {
-    const {validated} = req;
+    const {uuid} = req.body;
 
-    await arduinoConfigurationsService.deleteArduinoConfigurationByUuid(validated.uuid);
+    await arduinoConfigurationsService.deleteArduinoConfigurationByUuid(uuid);
 
-    res.text()
+    res.send().status(200);
+}
+
+const updateArduinoConfiguration = async (req, res) => {
+    const dto = new ArduinoConfigurationDto(req.body);
+
+    const result = await arduinoConfigurationsService.updateArduinoConfiguration(dto);
+
+    res.json(result)
         .status(200);
 }
 
 export {
     createArduinoConfiguration,
     deleteArduinoConfiguration,
-    getArduinoConfigurations
+    getArduinoConfigurations,
+    updateArduinoConfiguration
 }

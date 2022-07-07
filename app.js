@@ -7,6 +7,8 @@ import {fileURLToPath} from "url";
 
 import indexRouter from "./routes/index.js";
 import arduinoConfigurationsRouter from "./routes/arduino-configurations.js";
+import {getArduinoConfigurations} from "./services/arduino-configurations.js";
+import {createArduinoSession} from "./services/arduino-sessions.js";
 
 const app = express();
 
@@ -36,5 +38,8 @@ app.use(function (err, req, res, next) {
         error: req.app.get('env') === 'development' ? err : {}
     });
 });
+
+// initialize sessions
+getArduinoConfigurations().then(res => res.forEach(ele => createArduinoSession(ele)));
 
 export default app;

@@ -1,5 +1,6 @@
 import app from '../app.js';
 import http from "http";
+import addWebsocket from "../websocket.js";
 
 const normalizePort = (val) => {
     const port = parseInt(val, 10);
@@ -21,6 +22,8 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const server = http.createServer(app);
+
+addWebsocket(server);
 
 const onError = (error) => {
     if (error.syscall !== 'listen') {

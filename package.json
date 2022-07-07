@@ -7,6 +7,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@serialport/bindings-cpp": "^10.7.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -14,9 +15,11 @@
     "laravel-mix": "^6.0.49",
     "lodash": "^4.17.21",
     "lowdb": "^3.0.0",
+    "mitt": "^3.0.0",
     "morgan": "~1.9.1",
     "serialport": "^10.4.0",
     "uuid": "^8.3.2",
-    "validatorjs": "^3.22.1"
+    "validatorjs": "^3.22.1",
+    "ws": "^8.8.0"
   }
 }

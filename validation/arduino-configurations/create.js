@@ -7,10 +7,13 @@ const createArduinoConfigurationValidation = async (req, res, next) => {
 
     const validation = new Validator(req.body, {
         name: 'required|string|min:3|max:64',
-        serialport: 'required|string|min:4|max:36|in:' + serialports.join(',')
-        // pinouts: 'required|array',
-        // 'pinouts.*.valvePin': 'required|integer|min:1|max:99',
-        // 'pinouts.*.sensorPin': 'required|integer|min:1|max:99'
+        serialport: 'required|string|min:4|max:36|in:' + serialports.join(','),
+        pinouts: 'present|array',
+        'pinouts.*.type': 'required|string|in:SCHEDULE,SENSOR',
+        'pinouts.*.valves': 'present|array',
+        'pinouts.*.valves.*': 'required|integer|min:1|max:99',
+        'pinouts.*.sensors': 'present|array',
+        'pinouts.*.sensors.*': 'required|integer|min:1|max:99'
     });
 
     if (validation.fails()) {

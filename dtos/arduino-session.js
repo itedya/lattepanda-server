@@ -3,6 +3,8 @@ class ArduinoSession {
     #serialport;
 
     constructor(config, serialport) {
+        this.#config = config;
+        this.#serialport = serialport;
     }
 
     getConfig() {

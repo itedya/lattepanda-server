@@ -1,7 +1,7 @@
 import {ArduinoConfigurationEntity} from "@/app/entities/arduino-configuration.entity";
 import {ArduinoSessionEntity} from "@/app/entities/arduino-session.entity";
 import {eventBus} from "@/app/event-bus";
-import {SerialPort} from "serialport";
+import {ReadlineParser, SerialPort} from "serialport";
 import _ from "lodash";
 
 export class ArduinoSessionsService {
@@ -28,6 +28,8 @@ export class ArduinoSessionsService {
                 dto.configuration = config;
                 dto.connection = serialport;
 
+                this.assignReadPipe(dto);
+
                 this.sessions.push(dto);
 
                 if (error) {
@@ -39,6 +41,14 @@ export class ArduinoSessionsService {
                 eventBus.emit('arduino-sessions.connection-success', dto);
                 resolve(dto);
             });
+        });
+    }
+
+    private assignReadPipe(dto: ArduinoSessionEntity) {
+        const parser = dto.connection.pipe(new ReadlineParser({delimiter: '\r\n'}));
+
+        parser.on('data', (data) => {
+            eventBus.emit('arduino-sessions.raw-read', {}, data, dto);
         });
     }
 

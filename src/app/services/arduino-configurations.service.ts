@@ -6,6 +6,7 @@ import {UpdateArduinoConfigurationDto} from "@/app/dtos/update-arduino-configura
 import {SerialPort} from "serialport";
 import {PortInfo} from "@serialport/bindings-cpp";
 import {v4} from "uuid";
+import {instanceToPlain, plainToInstance} from "class-transformer";
 
 export class ArduinoConfigurationsService {
     // singleton pattern
@@ -47,7 +48,7 @@ export class ArduinoConfigurationsService {
     }
 
     create(createDto: CreateArduinoConfigurationDto): ArduinoConfigurationEntity {
-        const entity = ArduinoConfigurationEntity.fromCreateDto(createDto);
+        const entity = plainToInstance(ArduinoConfigurationEntity, instanceToPlain(createDto));
         entity.uuid = v4();
 
         this.db.data.arduinoConfigurations.push(entity);
@@ -68,7 +69,7 @@ export class ArduinoConfigurationsService {
     update(dto: UpdateArduinoConfigurationDto): ArduinoConfigurationEntity {
         const index = _.findIndex(this.db.data.arduinoConfigurations, {uuid: dto.uuid});
 
-        const entity = ArduinoConfigurationEntity.fromUpdateDto(dto);
+        const entity = plainToInstance(ArduinoConfigurationEntity, instanceToPlain(dto));
 
         this.db.data.arduinoConfigurations.splice(index, 1, entity);
 

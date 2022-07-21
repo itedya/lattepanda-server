@@ -1,6 +1,6 @@
-import {CreatePinoutDto} from "@/app/dtos/create-pinout.dto";
-import {IsNotEmpty, IsObject, IsString, ValidateNested} from "class-validator";
+import {IsArray, IsNotEmpty, IsString, ValidateNested} from "class-validator";
 import {IsFreeSerialport} from "@/app/validators/is-serialport.validator";
+import {CreatePinoutDto, CreateSchedulePinoutDto} from "@/app/dtos/create-pinout.dto";
 import {Type} from "class-transformer";
 
 export class CreateArduinoConfigurationDto {
@@ -14,8 +14,16 @@ export class CreateArduinoConfigurationDto {
     serialportPath: string;
 
     @IsNotEmpty()
-    @IsObject()
+    @IsArray()
     @ValidateNested()
-    @Type(() => CreatePinoutDto)
-    pinout: CreatePinoutDto;
+    @Type(() => CreatePinoutDto, {
+        keepDiscriminatorProperty: true,
+        discriminator: {
+            property: "type",
+            subTypes: [
+                {name: "SCHEDULE", value: CreateSchedulePinoutDto}
+            ]
+        }
+    })
+    pinouts: CreateSchedulePinoutDto[];
 }

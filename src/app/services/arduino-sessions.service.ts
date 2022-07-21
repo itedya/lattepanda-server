@@ -3,6 +3,8 @@ import {ArduinoSessionEntity} from "@/app/entities/arduino-session.entity";
 import {eventBus} from "@/app/event-bus";
 import {ReadlineParser, SerialPort} from "serialport";
 import _ from "lodash";
+import {ArduinoConfigurationsService} from "@/app/services/arduino-configurations.service";
+import {JobSchedulerService} from "@/app/services/job-scheduler.service";
 
 export class ArduinoSessionsService {
     private static instance: ArduinoSessionsService;
@@ -12,10 +14,29 @@ export class ArduinoSessionsService {
         return this.instance;
     }
 
+    private arduinoConfigurationsService: ArduinoConfigurationsService
+    private jobSchedulerService: JobSchedulerService;
+
     private constructor() {
+        this.arduinoConfigurationsService = ArduinoConfigurationsService.getInstance();
+        this.jobSchedulerService = JobSchedulerService.getInstance();
     }
 
     private sessions: Array<ArduinoSessionEntity> = [];
+
+    async initializeSessions() {
+        for (const config of this.arduinoConfigurationsService.all()) {
+            const session = await this.create(config);
+
+            for (const pinout of config.pinouts) {
+                if (pinout.type === "SCHEDULE") {
+                    await this.jobSchedulerService.scheduleJobsForSession(session);
+                } else {
+                    console.error("Unknown pinout type!");
+                }
+            }
+        }
+    }
 
     async create(config: ArduinoConfigurationEntity): Promise<ArduinoSessionEntity> {
         return new Promise((resolve, reject) => {
@@ -29,6 +50,7 @@ export class ArduinoSessionsService {
                 dto.connection = serialport;
 
                 this.assignReadPipe(dto);
+                this.jobSchedulerService.scheduleJobsForSession(dto);
 
                 this.sessions.push(dto);
 

@@ -1,8 +1,9 @@
 import {UpdatePinoutDto} from "@/app/dtos/update-pinout.dto";
-import {IsNotEmpty, IsObject, IsString, IsUUID, Length, ValidateNested} from "class-validator";
+import {IsArray, IsNotEmpty, IsString, IsUUID, Length, ValidateNested} from "class-validator";
 import {IsFreeSerialport} from "@/app/validators/is-serialport.validator";
 import {IsConfigurationUuid} from "@/app/validators/is-configuration-uuid.validator";
 import {Type} from "class-transformer";
+import {UpdateSchedulePinoutDto} from "@/app/dtos/update-pinout.dto";
 
 export class UpdateArduinoConfigurationDto {
     @IsNotEmpty()
@@ -21,8 +22,16 @@ export class UpdateArduinoConfigurationDto {
     public serialportPath: string;
 
     @IsNotEmpty()
-    @IsObject()
-    @Type(() => UpdatePinoutDto)
+    @IsArray()
     @ValidateNested()
-    public pinout: UpdatePinoutDto;
+    @Type(() => UpdatePinoutDto, {
+        keepDiscriminatorProperty: true,
+        discriminator: {
+            property: "type",
+            subTypes: [
+                {name: "SCHEDULE", value: UpdateSchedulePinoutDto}
+            ]
+        }
+    })
+    pinouts: UpdateSchedulePinoutDto[];
 }
